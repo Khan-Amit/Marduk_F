@@ -1,59 +1,74 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <string.h>
+#include <unistd.h>
 
 /*
  Marduk_F
- ENKOMOS Renewable Telemetry System™
+ Collector.c — REAL-TIME DATA INGESTION LAYER
 
- Designed and Developed by:
- Seliim Ahmed
-
- Experimental Collector Engine
+ Fetches live weather data and converts it into field telemetry
 */
 
-void initializeCollector() {
+#define API_URL "https://wttr.in/Singapore?format=j1"
+#define OUTPUT_FILE "../telemetry/telemetry.json"
 
-    printf("=====================================\n");
-    printf(" Marduk_F TELEMETRY COLLECTOR\n");
-    printf(" ENKOMOS Renewable System\n");
-    printf("=====================================\n");
+/* helper: write raw JSON into file */
+void write_file(const char *data) {
+    FILE *f = fopen(OUTPUT_FILE, "w");
+    if (!f) {
+        printf("ERROR: cannot open telemetry.json\n");
+        return;
+    }
 
+    fprintf(f, "%s", data);
+    fclose(f);
 }
 
-void weatherCollector() {
+/* fetch API using system curl */
+void fetch_data(char *buffer, size_t size) {
+    FILE *fp;
+    char cmd[] = "curl -s https://wttr.in/Singapore?format=j1";
 
-    printf("[COLLECTOR] Weather API Connected\n");
+    fp = popen(cmd, "r");
+    if (!fp) {
+        strcpy(buffer, "{\"error\":\"curl failed\"}");
+        return;
+    }
 
+    fread(buffer, 1, size - 1, fp);
+    pclose(fp);
 }
 
-void telemetryCollector() {
-
-    int piu = rand() % 20 + 75;
-
-    int solar = rand() % 25 + 70;
-
-    int battery = rand() % 15 + 80;
-
-    printf("[PIU] %d%%\n", piu);
-
-    printf("[SOLAR] %d%%\n", solar);
-
-    printf("[BATTERY] %d%%\n", battery);
-
+/* minimal transform: wrap raw API into field format */
+void transform_to_field(const char *input, char *output) {
+    snprintf(output, 8192,
+        "{\n"
+        "  \"source\": \"wttr.in\",\n"
+        "  \"raw\": %s\n"
+        "}\n",
+        input
+    );
 }
 
 int main() {
+    char raw[8192];
+    char transformed[16384];
 
-    srand(time(NULL));
+    printf("Marduk_F Collector started (REAL-TIME MODE)\n");
 
-    initializeCollector();
+    while (1) {
+        memset(raw, 0, sizeof(raw));
+        memset(transformed, 0, sizeof(transformed));
 
-    weatherCollector();
+        fetch_data(raw, sizeof(raw));
+        transform_to_field(raw, transformed);
+        write_file(transformed);
 
-    telemetryCollector();
+        printf("Telemetry updated.\n");
 
-    printf("[STATUS] Collector Engine Active\n");
+        sleep(5); // 5-second real-time tick
+    }
 
     return 0;
 }
