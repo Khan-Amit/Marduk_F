@@ -4,100 +4,112 @@
 
 /*
  Marduk_F
- Sluice-Bench™ Telemetry Processor
+ Sluice-Bench™ Telemetry Processor (Core Engine)
 
- Designed and Developed by:
- Seliim Ahmed
+ Now with JSON telemetry export
+ Designed by: Seliim Ahmed
 */
 
+#define NODE_COUNT 10
+
 typedef struct {
+    int node_id;
+    float field_strength;
+    float entropy_level;
+    char status[32];
+} Node;
 
-    int piu;
-    int solar;
-    int battery;
+typedef struct {
+    Node nodes[NODE_COUNT];
+    int active_nodes;
+    float global_coherence;
+} MardukSystem;
 
-} TelemetryData;
+/* ---------------- INIT SYSTEM ---------------- */
+void init_system(MardukSystem *sys) {
+    sys->active_nodes = 0;
+    sys->global_coherence = 0.0f;
 
-void initializeSluiceBench() {
-
-    printf("=====================================\n");
-    printf(" SLUICE-BENCH INITIALIZED\n");
-    printf(" Renewable Telemetry Processor\n");
-    printf("=====================================\n");
-
+    for (int i = 0; i < NODE_COUNT; i++) {
+        sys->nodes[i].node_id = i;
+        sys->nodes[i].field_strength = 0.0f;
+        sys->nodes[i].entropy_level = 0.0f;
+        strcpy(sys->nodes[i].status, "offline");
+    }
 }
 
-void processTelemetry(TelemetryData data) {
+/* ---------------- ACTIVATE NODE ---------------- */
+void activate_node(MardukSystem *sys, int id, float field, float entropy) {
+    if (id < 0 || id >= NODE_COUNT) return;
 
-    printf("[PROCESSING] Incoming Telemetry Stream\n");
-
-    /* PIU FILTER */
-
-    if (data.piu > 85) {
-
-        printf("[PIU] HIGH STABILITY\n");
-
-    } else {
-
-        printf("[PIU] MODERATE LOAD\n");
-
-    }
-
-    /* SOLAR FILTER */
-
-    if (data.solar > 80) {
-
-        printf("[SOLAR] OPTIMAL HARVEST\n");
-
-    } else {
-
-        printf("[SOLAR] LOW INPUT\n");
-
-    }
-
-    /* BATTERY FILTER */
-
-    if (data.battery > 75) {
-
-        printf("[BATTERY] STORAGE STABLE\n");
-
-    } else {
-
-        printf("[BATTERY] LOW STORAGE WARNING\n");
-
-    }
-
+    sys->nodes[id].field_strength = field;
+    sys->nodes[id].entropy_level = entropy;
+    strcpy(sys->nodes[id].status, "active");
 }
 
-void telemetryIndex(TelemetryData data) {
+/* ---------------- COMPUTE COHERENCE ---------------- */
+void compute_coherence(MardukSystem *sys) {
+    float sum = 0.0f;
+    int active = 0;
 
-    printf("\n[INDEX REPORT]\n");
+    for (int i = 0; i < NODE_COUNT; i++) {
+        if (strcmp(sys->nodes[i].status, "active") == 0) {
+            sum += sys->nodes[i].field_strength - sys->nodes[i].entropy_level;
+            active++;
+        }
+    }
 
-    printf("PIU INDEX: %d\n", data.piu);
-
-    printf("SOLAR INDEX: %d\n", data.solar);
-
-    printf("BATTERY INDEX: %d\n", data.battery);
-
+    if (active > 0)
+        sys->global_coherence = sum / NODE_COUNT;
+    else
+        sys->global_coherence = 0.0f;
 }
 
+/* ---------------- EXPORT TO JSON ---------------- */
+void export_telemetry(MardukSystem *sys) {
+    FILE *f = fopen("../telemetry/telemetry.json", "w");
+
+    if (!f) {
+        printf("ERROR: Cannot open telemetry.json\n");
+        return;
+    }
+
+    fprintf(f, "{\n");
+    fprintf(f, "  \"active_nodes\": %d,\n", sys->active_nodes);
+    fprintf(f, "  \"global_coherence\": %.4f,\n", sys->global_coherence);
+    fprintf(f, "  \"nodes\": [\n");
+
+    for (int i = 0; i < NODE_COUNT; i++) {
+        fprintf(f, "    {\n");
+        fprintf(f, "      \"node_id\": %d,\n", sys->nodes[i].node_id);
+        fprintf(f, "      \"field_strength\": %.4f,\n", sys->nodes[i].field_strength);
+        fprintf(f, "      \"entropy_level\": %.4f,\n", sys->nodes[i].entropy_level);
+        fprintf(f, "      \"status\": \"%s\"\n", sys->nodes[i].status);
+        fprintf(f, "    }%s\n", (i < NODE_COUNT - 1) ? "," : "");
+    }
+
+    fprintf(f, "  ]\n");
+    fprintf(f, "}\n");
+
+    fclose(f);
+}
+
+/* ---------------- MAIN LOOP ---------------- */
 int main() {
+    MardukSystem system;
 
-    TelemetryData currentTelemetry;
+    init_system(&system);
 
-    currentTelemetry.piu = 84;
+    /* Example simulation tick */
+    activate_node(&system, 0, 0.8f, 0.2f);
+    activate_node(&system, 1, 0.6f, 0.3f);
+    activate_node(&system, 2, 0.9f, 0.4f);
+    activate_node(&system, 3, 0.4f, 0.1f);
 
-    currentTelemetry.solar = 88;
+    compute_coherence(&system);
+    export_telemetry(&system);
 
-    currentTelemetry.battery = 91;
-
-    initializeSluiceBench();
-
-    processTelemetry(currentTelemetry);
-
-    telemetryIndex(currentTelemetry);
-
-    printf("\n[STATUS] Sluice-Bench Active\n");
+    printf("Marduk_F telemetry exported successfully.\n");
 
     return 0;
 }
