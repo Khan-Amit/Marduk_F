@@ -1,4 +1,4 @@
-async function fetchState() {
+async function updateUI() {
     try {
         const res = await fetch("telemetry/system_state.json");
         const data = await res.json();
@@ -12,12 +12,11 @@ async function fetchState() {
         document.getElementById("mode").innerText =
             "Mode: " + (data.mode ?? "offline");
 
-    } catch (err) {
+    } catch (e) {
         document.getElementById("status").innerText =
-            "Status: waiting for C engine...";
+            "Status: waiting for pipeline...";
     }
 }
 
-/* LIVE LOOP */
-setInterval(fetchState, 1000);
-fetchState();
+setInterval(updateUI, 1000);
+updateUI();
