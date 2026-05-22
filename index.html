@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Marduk_F</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="top-bar">
+
+    <div class="logo-section">
+      <h1>Marduk_F™</h1>
+      <p>ENKOMOS Renewable Telemetry System™</p>
+    </div>
+
+    <div class="system-status">
+      <span class="live-dot"></span>
+      LIVE TELEMETRY
+    </div>
+
+  </header>
+
+  <!-- MAIN SLIDER -->
+  <main class="slider-container">
+
+    <!-- PAGE 1 -->
+    <section class="page telemetry-page">
+
+      <!-- PIU DIAL -->
+      <div class="piu-container">
+
+        <div class="piu-dial">
+          <div class="dial-inner">
+            <h2>PIU</h2>
+            <span id="piuValue">84%</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- GAUGES -->
+      <div class="gauges-grid">
+
+        <div class="gauge-card">
+          <h3>Solar Flux</h3>
+          <div class="gauge blue"></div>
+        </div>
+
+        <div class="gauge-card">
+          <h3>Wind Intake</h3>
+          <div class="gauge yellow"></div>
+        </div>
+
+        <div class="gauge-card">
+          <h3>Battery State</h3>
+          <div class="gauge green"></div>
+        </div>
+
+        <div class="gauge-card">
+          <h3>Thermal Load</h3>
+          <div class="gauge red"></div>
+        </div>
+
+      </div>
+
+      <!-- CONTROL PANEL -->
+      <div class="control-panel">
+
+        <select id="locationSelect">
+          <option>Singapore</option>
+          <option>Bangkok</option>
+          <option>Tokyo</option>
+          <option>Delhi</option>
+        </select>
+
+        <select id="sourceSelect">
+          <option>OpenWeather</option>
+          <option>NOAA</option>
+          <option>NASA</option>
+        </select>
+
+        <div class="button-row">
+          <button class="btn normal">START</button>
+          <button class="btn normal">PAUSE</button>
+          <button class="btn critical">STOP</button>
+        </div>
+
+      </div>
+
+      <!-- TELEMETRY WINDOW -->
+      <div class="telemetry-window">
+
+        <div class="terminal-output" id="terminalOutput">
+
+          <p>> INITIALIZING TELEMETRY...</p>
+          <p>> WEATHER STREAM CONNECTED</p>
+          <p>> PIU CORE STABLE</p>
+          <p class="alert">> WARNING: THERMAL LOAD ELEVATED</p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- PAGE 2 -->
+    <section class="page comparison-page">
+
+      <h2>Comparison Analytics</h2>
+
+      <div class="comparison-grid">
+
+        <div class="compare-box">
+          <h3>Renewable Savings</h3>
+          <p>€ 347 / Year</p>
+        </div>
+
+        <div class="compare-box">
+          <h3>Grid Offset</h3>
+          <p>62%</p>
+        </div>
+
+        <div class="compare-box">
+          <h3>Battery Longevity</h3>
+          <p>9,200 Cycles</p>
+        </div>
+
+        <div class="compare-box">
+          <h3>Infrastructure Profile</h3>
+          <p>Mobile Telemetry Rack</p>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
