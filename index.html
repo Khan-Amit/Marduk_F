@@ -11,98 +11,101 @@
 
 <body>
 
-  <header class="top-bar">
+<div class="app">
 
-    <div class="logo-section">
+  <!-- HEADER -->
+  <header class="topbar">
+    <div>
       <h1>Marduk_F™</h1>
-      <p>ENKOMOS Renewable Telemetry System™</p>
+      <p>Midnight Telemetry System</p>
     </div>
-
-    <div class="system-status">
-      <span class="live-dot"></span>
-      LIVE TELEMETRY
-    </div>
-
+    <div class="live">● LIVE</div>
   </header>
 
-  <main class="slider-container">
+  <!-- SLIDER -->
+  <div class="slider" id="slider">
 
     <!-- PAGE 1 -->
-    <section class="page telemetry-page">
+    <section class="page">
 
       <!-- PIU DIAL -->
-      <div class="piu-container">
-        <div class="piu-dial">
+      <div class="dial-container">
+        <div class="dial">
           <div class="dial-inner">
-            <h2>PIU</h2>
-            <span id="piuValue">--%</span>
+            <div class="dial-label">PIU</div>
+            <div id="piuValue" class="dial-value">--%</div>
           </div>
         </div>
       </div>
 
       <!-- GAUGES -->
-      <div class="gauges-grid">
+      <div class="gauges">
 
-        <div class="gauge-card">
-          <h3>Coherence</h3>
-          <div class="gauge blue" id="coherenceGauge"></div>
+        <div class="gauge blue">
+          <span>COHERENCE</span>
+          <div class="bar" id="cohBar"></div>
         </div>
 
-        <div class="gauge-card">
-          <h3>System Status</h3>
-          <div class="gauge green" id="statusGauge"></div>
+        <div class="gauge yellow">
+          <span>SIGNAL</span>
+          <div class="bar" id="sigBar"></div>
         </div>
 
-        <div class="gauge-card">
-          <h3>Mode</h3>
-          <div class="gauge yellow" id="modeGauge"></div>
+        <div class="gauge red">
+          <span>LOAD</span>
+          <div class="bar" id="loadBar"></div>
         </div>
 
-        <div class="gauge-card">
-          <h3>Signal Integrity</h3>
-          <div class="gauge red" id="signalGauge"></div>
-        </div>
-
-      </div>
-
-      <!-- CONTROL PANEL -->
-      <div class="control-panel">
-
-        <select id="locationSelect">
-          <option>Singapore</option>
-          <option>Bangkok</option>
-          <option>Tokyo</option>
-          <option>Delhi</option>
-        </select>
-
-        <select id="sourceSelect">
-          <option>Live C Engine</option>
-        </select>
-
-        <div class="button-row">
-          <button class="btn normal">START</button>
-          <button class="btn normal">PAUSE</button>
-          <button class="btn critical">STOP</button>
+        <div class="gauge green">
+          <span>GREEN</span>
+          <div class="bar" id="greenBar"></div>
         </div>
 
       </div>
 
-      <!-- TELEMETRY WINDOW -->
-      <div class="telemetry-window">
-        <div class="terminal-output">
+      <!-- BUTTONS -->
+      <div class="controls">
+        <button class="btn bluegray">START</button>
+        <button class="btn bluegray">PAUSE</button>
+        <button class="btn red">STOP</button>
+      </div>
 
-          <p id="line1">> WAITING FOR ENGINE...</p>
-          <p id="line2"></p>
-          <p id="line3"></p>
-
-        </div>
+      <!-- DISPLAY -->
+      <div class="display">
+        <p id="line1">> WAITING FOR ENGINE...</p>
+        <p id="line2"></p>
+        <p id="line3"></p>
       </div>
 
     </section>
 
-  </main>
+    <!-- PAGE 2 -->
+    <section class="page">
 
-  <script src="app.js"></script>
+      <div class="compare-title">Comparison Data</div>
 
+      <div class="compare-box">
+        <div>Renewable</div><div id="renew">--</div>
+      </div>
+
+      <div class="compare-box">
+        <div>Grid Offset</div><div id="grid">--</div>
+      </div>
+
+      <div class="compare-box">
+        <div>Battery</div><div id="battery">--</div>
+      </div>
+
+      <div class="compare-box green">
+        <div>Green Energy</div><div id="green">--</div>
+      </div>
+
+    </section>
+
+  </div>
+
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
