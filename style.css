@@ -1,44 +1,90 @@
 body {
-    margin: 0;
-    font-family: 'Orbitron', sans-serif;
-    background: #0b0f1a;
-    color: #00ffcc;
+  margin: 0;
+  font-family: Orbitron;
+  background: #050814;
+  color: white;
 }
 
-.top-bar {
-    padding: 20px;
-    background: #11182a;
-    text-align: center;
-    border-bottom: 1px solid #00ffcc;
+/* TOP */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  background: #070c1f;
+  border-bottom: 1px solid #1b2a55;
 }
 
-.tagline {
-    font-size: 12px;
-    opacity: 0.7;
+.live {
+  color: #00aaff;
 }
 
-.container {
-    padding: 20px;
+/* DIAL */
+.dial-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
-.panel {
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #00ffcc;
-    border-radius: 10px;
-    max-width: 600px;
-    background: rgba(0,0,0,0.3);
+.dial {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 3px solid #0a4cff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 2s infinite;
 }
 
-.console {
-    font-size: 12px;
-    opacity: 0.8;
-    line-height: 1.5;
+@keyframes pulse {
+  0% { box-shadow: 0 0 5px #0a4cff; }
+  50% { box-shadow: 0 0 20px #0a4cff; }
+  100% { box-shadow: 0 0 5px #0a4cff; }
 }
 
-.footer {
-    text-align: center;
-    padding: 10px;
-    font-size: 12px;
-    opacity: 0.6;
+/* GAUGES */
+.gauges {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 20px;
+}
+
+.gauge {
+  background: #0b1024;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.bar {
+  height: 6px;
+  background: #222;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.bar::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 0%;
+  transition: width 0.5s;
+}
+
+.blue .bar::after { background: #0a4cff; }
+.yellow .bar::after { background: #c7a500; }
+.red .bar::after { background: #ff2a2a; }
+.green .bar::after { background: #00c853; }
+
+/* DISPLAY */
+.display {
+  margin: 20px;
+  background: black;
+  padding: 10px;
+}
+
+.display p:nth-child(2),
+.display p:nth-child(3) {
+  color: #ff3b3b;
 }
