@@ -1,22 +1,23 @@
-async function updateSystem() {
+async function fetchState() {
     try {
         const res = await fetch("telemetry/system_state.json");
         const data = await res.json();
 
         document.getElementById("coherence").innerText =
-            "Coherence: " + data.coherence.toFixed(4);
+            "Coherence: " + (data.coherence ?? 0).toFixed(4);
 
         document.getElementById("status").innerText =
-            "Status: " + data.status;
+            "Status: " + (data.status ?? "waiting");
 
         document.getElementById("mode").innerText =
-            "Mode: " + data.mode;
+            "Mode: " + (data.mode ?? "offline");
 
-    } catch (e) {
+    } catch (err) {
         document.getElementById("status").innerText =
-            "Status: waiting for engine...";
+            "Status: waiting for C engine...";
     }
 }
 
-setInterval(updateSystem, 1000);
-updateSystem();
+/* LIVE LOOP */
+setInterval(fetchState, 1000);
+fetchState();
