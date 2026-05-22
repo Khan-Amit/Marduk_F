@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Marduk_F</title>
 
+  <!-- IMPORTANT: relative paths ONLY -->
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -13,96 +14,56 @@
 
 <div class="app">
 
-  <!-- HEADER -->
   <header class="topbar">
-    <div>
-      <h1>Marduk_F™</h1>
-      <p>Midnight Telemetry System</p>
-    </div>
+    <h1>Marduk_F™</h1>
     <div class="live">● LIVE</div>
   </header>
 
-  <!-- SLIDER -->
-  <div class="slider" id="slider">
+  <section class="page">
 
-    <!-- PAGE 1 -->
-    <section class="page">
-
-      <!-- PIU DIAL -->
-      <div class="dial-container">
-        <div class="dial">
-          <div class="dial-inner">
-            <div class="dial-label">PIU</div>
-            <div id="piuValue" class="dial-value">--%</div>
-          </div>
+    <!-- PIU DIAL -->
+    <div class="dial-container">
+      <div class="dial">
+        <div class="dial-inner">
+          <div>PIU</div>
+          <div id="piuValue">--%</div>
         </div>
       </div>
+    </div>
 
-      <!-- GAUGES -->
-      <div class="gauges">
+    <!-- GAUGES -->
+    <div class="gauges">
 
-        <div class="gauge blue">
-          <span>COHERENCE</span>
-          <div class="bar" id="cohBar"></div>
-        </div>
-
-        <div class="gauge yellow">
-          <span>SIGNAL</span>
-          <div class="bar" id="sigBar"></div>
-        </div>
-
-        <div class="gauge red">
-          <span>LOAD</span>
-          <div class="bar" id="loadBar"></div>
-        </div>
-
-        <div class="gauge green">
-          <span>GREEN</span>
-          <div class="bar" id="greenBar"></div>
-        </div>
-
+      <div class="gauge blue">
+        COHERENCE
+        <div class="bar" id="cohBar"></div>
       </div>
 
-      <!-- BUTTONS -->
-      <div class="controls">
-        <button class="btn bluegray">START</button>
-        <button class="btn bluegray">PAUSE</button>
-        <button class="btn red">STOP</button>
+      <div class="gauge yellow">
+        SIGNAL
+        <div class="bar" id="sigBar"></div>
       </div>
 
-      <!-- DISPLAY -->
-      <div class="display">
-        <p id="line1">> WAITING FOR ENGINE...</p>
-        <p id="line2"></p>
-        <p id="line3"></p>
+      <div class="gauge red">
+        LOAD
+        <div class="bar" id="loadBar"></div>
       </div>
 
-    </section>
-
-    <!-- PAGE 2 -->
-    <section class="page">
-
-      <div class="compare-title">Comparison Data</div>
-
-      <div class="compare-box">
-        <div>Renewable</div><div id="renew">--</div>
+      <div class="gauge green">
+        GREEN
+        <div class="bar" id="greenBar"></div>
       </div>
 
-      <div class="compare-box">
-        <div>Grid Offset</div><div id="grid">--</div>
-      </div>
+    </div>
 
-      <div class="compare-box">
-        <div>Battery</div><div id="battery">--</div>
-      </div>
+    <!-- DISPLAY -->
+    <div class="display">
+      <p id="line1">> WAITING...</p>
+      <p id="line2"></p>
+      <p id="line3"></p>
+    </div>
 
-      <div class="compare-box green">
-        <div>Green Energy</div><div id="green">--</div>
-      </div>
-
-    </section>
-
-  </div>
+  </section>
 
 </div>
 
