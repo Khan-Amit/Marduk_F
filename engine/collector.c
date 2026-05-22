@@ -5,69 +5,67 @@
 
 /*
  Marduk_F
- Collector.c — REAL-TIME DATA INGESTION LAYER
-
- Fetches live weather data and converts it into field telemetry
+ Collector.c — Real Ingestion Layer (Linked with Pre-Collector)
 */
 
-#define API_URL "https://wttr.in/Singapore?format=j1"
+#define INPUT_FILE "../telemetry/pre_filtered.json"
 #define OUTPUT_FILE "../telemetry/telemetry.json"
 
-/* helper: write raw JSON into file */
-void write_file(const char *data) {
-    FILE *f = fopen(OUTPUT_FILE, "w");
-    if (!f) {
-        printf("ERROR: cannot open telemetry.json\n");
-        return;
-    }
+/* read file */
+char* read_file(const char *path) {
+    FILE *f = fopen(path, "r");
+    if (!f) return NULL;
 
-    fprintf(f, "%s", data);
+    fseek(f, 0, SEEK_END);
+    long size = ftell(f);
+    rewind(f);
+
+    char *buffer = (char*)malloc(size + 1);
+    fread(buffer, 1, size, f);
+    buffer[size] = '\0';
+
     fclose(f);
+    return buffer;
 }
 
-/* fetch API using system curl */
-void fetch_data(char *buffer, size_t size) {
-    FILE *fp;
-    char cmd[] = "curl -s https://wttr.in/Singapore?format=j1";
-
-    fp = popen(cmd, "r");
-    if (!fp) {
-        strcpy(buffer, "{\"error\":\"curl failed\"}");
-        return;
-    }
-
-    fread(buffer, 1, size - 1, fp);
-    pclose(fp);
-}
-
-/* minimal transform: wrap raw API into field format */
-void transform_to_field(const char *input, char *output) {
-    snprintf(output, 8192,
+/* wrap into telemetry format */
+void wrap_telemetry(const char *input, char *output) {
+    snprintf(output, 4096,
         "{\n"
-        "  \"source\": \"wttr.in\",\n"
-        "  \"raw\": %s\n"
+        "  \"source\": \"pre_collector\",\n"
+        "  \"payload\": %s\n"
         "}\n",
         input
     );
 }
 
 int main() {
-    char raw[8192];
-    char transformed[16384];
 
-    printf("Marduk_F Collector started (REAL-TIME MODE)\n");
+    printf("Collector running...\n");
 
     while (1) {
-        memset(raw, 0, sizeof(raw));
-        memset(transformed, 0, sizeof(transformed));
 
-        fetch_data(raw, sizeof(raw));
-        transform_to_field(raw, transformed);
-        write_file(transformed);
+        char *data = read_file(INPUT_FILE);
 
-        printf("Telemetry updated.\n");
+        if (!data) {
+            printf("waiting for pre_collector...\n");
+            sleep(2);
+            continue;
+        }
 
-        sleep(5); // 5-second real-time tick
+        char output[4096];
+        wrap_telemetry(data, output);
+
+        FILE *f = fopen(OUTPUT_FILE, "w");
+        if (f) {
+            fprintf(f, "%s", output);
+            fclose(f);
+        }
+
+        free(data);
+
+        printf("Telemetry updated\n");
+        sleep(2);
     }
 
     return 0;
