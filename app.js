@@ -1,22 +1,35 @@
-async function updateUI() {
-    try {
-        const res = await fetch("telemetry/system_state.json");
-        const data = await res.json();
+async function update() {
+  try {
+    const res = await fetch("telemetry/system_state.json");
+    const data = await res.json();
 
-        document.getElementById("coherence").innerText =
-            "Coherence: " + (data.coherence ?? 0).toFixed(4);
+    const c = data.coherence ?? 0;
 
-        document.getElementById("status").innerText =
-            "Status: " + (data.status ?? "waiting");
+    // PIU DIAL
+    document.getElementById("piuValue").innerText =
+      Math.round(c * 100) + "%";
 
-        document.getElementById("mode").innerText =
-            "Mode: " + (data.mode ?? "offline");
+    // GAUGES
+    setBar("cohBar", c);
+    setBar("sigBar", c * 0.8);
+    setBar("loadBar", 1 - c);
+    setBar("greenBar", c * 0.6);
 
-    } catch (e) {
-        document.getElementById("status").innerText =
-            "Status: waiting for pipeline...";
-    }
+    // DISPLAY
+    document.getElementById("line1").innerText = "> SYSTEM ACTIVE";
+    document.getElementById("line2").innerText = "> COHERENCE: " + c.toFixed(3);
+    document.getElementById("line3").innerText = "> MODE: " + (data.mode || "live");
+
+  } catch (e) {
+    document.getElementById("line1").innerText =
+      "> WAITING FOR ENGINE...";
+  }
 }
 
-setInterval(updateUI, 1000);
-updateUI();
+function setBar(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.style.width = (value * 100) + "%";
+}
+
+setInterval(update, 1000);
+update();
