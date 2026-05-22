@@ -1,18 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include "cJSON.h"
 
 /*
  Marduk_F
- Sluice-Bench™ Processor (REAL DATA MODE)
+ Sluice-Bench™ Processor (REAL JSON MODE)
 
- Now processes parsed node data from parser.c
+ Fully JSON-driven computation engine
 */
 
 #define INPUT_FILE "../telemetry/parsed.json"
 #define OUTPUT_FILE "../telemetry/system_state.json"
 
-/* read file helper */
+/* read file */
 char* read_file(const char *path) {
     FILE *f = fopen(path, "r");
     if (!f) return NULL;
@@ -29,25 +29,25 @@ char* read_file(const char *path) {
     return buffer;
 }
 
-/* compute coherence from node assumptions */
-float compute_coherence() {
-    /*
-     NOTE:
-     Since we are not using full JSON parser yet,
-     we approximate coherence from known structure.
-    */
+/* compute coherence from JSON */
+float compute_coherence(cJSON *nodes) {
+    int count = cJSON_GetArraySize(nodes);
+    float sum = 0.0f;
 
-    float node1_field = 0.75;
-    float node1_entropy = 0.25;
+    for (int i = 0; i < count; i++) {
+        cJSON *node = cJSON_GetArrayItem(nodes, i);
 
-    float node2_field = 0.60;
-    float node2_entropy = 0.40;
+        cJSON *field = cJSON_GetObjectItem(node, "field_strength");
+        cJSON *entropy = cJSON_GetObjectItem(node, "entropy_level");
 
-    float coherence =
-        (node1_field - node1_entropy +
-         node2_field - node2_entropy) / 2.0f;
+        if (field && entropy) {
+            sum += (field->valuedouble - entropy->valuedouble);
+        }
+    }
 
-    return coherence;
+    if (count == 0) return 0.0f;
+
+    return sum / count;
 }
 
 int main() {
@@ -59,7 +59,16 @@ int main() {
         return 1;
     }
 
-    float coherence = compute_coherence();
+    cJSON *json = cJSON_Parse(data);
+    if (!json) {
+        printf("ERROR: invalid JSON\n");
+        free(data);
+        return 1;
+    }
+
+    cJSON *nodes = cJSON_GetObjectItem(json, "nodes");
+
+    float coherence = compute_coherence(nodes);
 
     FILE *f = fopen(OUTPUT_FILE, "w");
     if (!f) {
@@ -71,16 +80,18 @@ int main() {
         "{\n"
         "  \"system\": \"Marduk_F\",\n"
         "  \"coherence\": %.4f,\n"
-        "  \"status\": \"active\",\n"
-        "  \"mode\": \"real-data\"\n"
+        "  \"mode\": \"real-json\",\n"
+        "  \"status\": \"active\"\n"
         "}\n",
         coherence
     );
 
     fclose(f);
+
+    cJSON_Delete(json);
     free(data);
 
-    printf("Sluice-Bench processed real data. Coherence: %.4f\n", coherence);
+    printf("REAL ENGINE ACTIVE | Coherence: %.4f\n", coherence);
 
     return 0;
 }
