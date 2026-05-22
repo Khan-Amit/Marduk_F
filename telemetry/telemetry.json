@@ -1,0 +1,49 @@
+{
+  "system": "Marduk_F",
+  "telemetry_status": "ACTIVE",
+
+  "location": "Singapore",
+
+  "weather": {
+    "temperature_c": 31,
+    "humidity": 74,
+    "wind_speed_ms": 5.2,
+    "condition": "Cloudy"
+  },
+
+  "renewable_systems": {
+
+    "mitra_ssp": {
+      "solar_flux": 82,
+      "power_output_w": 6200,
+      "efficiency": 91
+    },
+
+    "enlilaeon_vwt": {
+      "wind_intake": 67,
+      "rotor_speed": 245,
+      "power_output_w": 410
+    },
+
+    "swb_sa": {
+      "battery_level": 88,
+      "cycle_health": 96,
+      "thermal_state": "STABLE"
+    }
+  },
+
+  "piu_core": {
+    "value": 84,
+    "status": "BALANCED"
+  },
+
+  "comparison": {
+
+    "grid_offset_percent": 62,
+
+    "estimated_yearly_savings_euro": 347,
+
+    "infrastructure_profile":
+      "Mobile Telemetry Rack"
+  }
+}
