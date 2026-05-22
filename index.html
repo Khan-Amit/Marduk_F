@@ -12,36 +12,95 @@
 <body>
 
   <header class="top-bar">
+
     <div class="logo-section">
       <h1>Marduk_F™</h1>
-      <p class="tagline">Real-Time Field Interface System</p>
+      <p>ENKOMOS Renewable Telemetry System™</p>
     </div>
+
+    <div class="system-status">
+      <span class="live-dot"></span>
+      LIVE TELEMETRY
+    </div>
+
   </header>
 
-  <main class="container">
+  <main class="slider-container">
 
-    <section class="panel">
-      <h2>Live System State</h2>
+    <!-- PAGE 1 -->
+    <section class="page telemetry-page">
 
-      <p id="coherence">Coherence: --</p>
-      <p id="status">Status: --</p>
-      <p id="mode">Mode: --</p>
-
-    </section>
-
-    <section class="panel">
-      <h2>System Console</h2>
-      <div class="console">
-        <p>> Waiting for collector.c...</p>
-        <p>> Connecting telemetry stream...</p>
+      <!-- PIU DIAL -->
+      <div class="piu-container">
+        <div class="piu-dial">
+          <div class="dial-inner">
+            <h2>PIU</h2>
+            <span id="piuValue">--%</span>
+          </div>
+        </div>
       </div>
+
+      <!-- GAUGES -->
+      <div class="gauges-grid">
+
+        <div class="gauge-card">
+          <h3>Coherence</h3>
+          <div class="gauge blue" id="coherenceGauge"></div>
+        </div>
+
+        <div class="gauge-card">
+          <h3>System Status</h3>
+          <div class="gauge green" id="statusGauge"></div>
+        </div>
+
+        <div class="gauge-card">
+          <h3>Mode</h3>
+          <div class="gauge yellow" id="modeGauge"></div>
+        </div>
+
+        <div class="gauge-card">
+          <h3>Signal Integrity</h3>
+          <div class="gauge red" id="signalGauge"></div>
+        </div>
+
+      </div>
+
+      <!-- CONTROL PANEL -->
+      <div class="control-panel">
+
+        <select id="locationSelect">
+          <option>Singapore</option>
+          <option>Bangkok</option>
+          <option>Tokyo</option>
+          <option>Delhi</option>
+        </select>
+
+        <select id="sourceSelect">
+          <option>Live C Engine</option>
+        </select>
+
+        <div class="button-row">
+          <button class="btn normal">START</button>
+          <button class="btn normal">PAUSE</button>
+          <button class="btn critical">STOP</button>
+        </div>
+
+      </div>
+
+      <!-- TELEMETRY WINDOW -->
+      <div class="telemetry-window">
+        <div class="terminal-output">
+
+          <p id="line1">> WAITING FOR ENGINE...</p>
+          <p id="line2"></p>
+          <p id="line3"></p>
+
+        </div>
+      </div>
+
     </section>
 
   </main>
-
-  <footer class="footer">
-    <p>Marduk_F™ v1.0 — Real-Time Field Engine</p>
-  </footer>
 
   <script src="app.js"></script>
 
